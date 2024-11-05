@@ -109,38 +109,37 @@ document.getElementById('colorSelect').addEventListener('input', function() {
 function downloadImage() {
     const originalWidth = canvas.width;
     const originalHeight = canvas.height;
-    const scaleFactor = 3; // Skala resolusi tinggi (misalnya 3x)
+    const scaleFactor = 3;
 
-    // Buat canvas sementara untuk menggambar dengan resolusi tinggi
+    // Create a temporary canvas
     const tempCanvas = document.createElement('canvas');
     const tempCtx = tempCanvas.getContext('2d');
     tempCanvas.width = originalWidth * scaleFactor;
     tempCanvas.height = originalHeight * scaleFactor;
 
-    // Gambar ulang dengan skala yang lebih besar
+    // Scale the context
     tempCtx.scale(scaleFactor, scaleFactor);
 
-    // Sesuaikan posisi dan ukuran gambar yang diunggah dengan skala
+    // Adjust image and text positions based on the scale
     const scaledImgX = imgX * scaleFactor;
     const scaledImgY = imgY * scaleFactor;
     const scaledImgWidth = imgWidth * scaleFactor;
     const scaledImgHeight = imgHeight * scaleFactor;
 
-    // Sesuaikan posisi teks dengan skala
     const scaledTextX = textX * scaleFactor;
     const scaledTextY = textY * scaleFactor;
     const scaledFontSize = 30 * scaleFactor;
 
-    // Gambar elemen dengan ukuran dan posisi yang disesuaikan
-    tempCtx.drawImage(img, scaledImgX, scaledImgY, scaledImgWidth, scaledImgHeight); // Gambar yang diunggah
-    tempCtx.drawImage(twibbonImage, 0, 0, originalWidth * scaleFactor, originalHeight * scaleFactor); // Template twibbon
+    // Draw uploaded image and template
+    tempCtx.drawImage(img, scaledImgX, scaledImgY, scaledImgWidth, scaledImgHeight);
+    tempCtx.drawImage(twibbonImage, 0, 0, originalWidth * scaleFactor, originalHeight * scaleFactor);
 
-    // Gambar teks dengan ukuran font yang disesuaikan
+    // Set the font and draw text
     tempCtx.font = `${scaledFontSize}px ${currentFont}`;
     tempCtx.fillStyle = currentColor;
     tempCtx.fillText(document.getElementById('inputName').value, scaledTextX, scaledTextY);
 
-    // Dapatkan URL gambar dari canvas sementara dan unduh
+    // Download the image
     const link = document.createElement('a');
     link.download = 'twibbon_hd.png';
     link.href = tempCanvas.toDataURL('image/png', 1.0);
