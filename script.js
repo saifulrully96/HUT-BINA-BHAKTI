@@ -7,11 +7,11 @@ let image, userName, fontType = 'Arial', textColor = '#000000';
 let textX = 360, textY = 680; // posisi default nama
 let imageX = 0, imageY = 0, imageScale = 1;
 
-// Gambar Twibbon di atas foto
+// Variabel untuk gambar Twibbon
 const twibbonImage = new Image();
 twibbonImage.src = 'twibbon.png';
 twibbonImage.onload = () => {
-    drawCanvas();
+    drawCanvas(); // Memanggil ulang penggambaran setelah Twibbon ter-load
 };
 
 // Function untuk meng-upload foto
@@ -51,7 +51,7 @@ function drawCanvas() {
     // Bersihkan canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Gambar foto pengguna jika ada
+    // Gambar foto pengguna terlebih dahulu jika ada
     if (image) {
         const scaledWidth = image.width * imageScale;
         const scaledHeight = image.height * imageScale;
@@ -132,4 +132,4 @@ function downloadImage() {
     link.href = hdCanvas.toDataURL('image/png');
     link.download = 'Twibbon-HD.png';
     link.click();
-}
+            }
