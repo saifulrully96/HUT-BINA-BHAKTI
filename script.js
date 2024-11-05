@@ -118,14 +118,6 @@ function downloadImage() {
     tempCanvas.width = originalWidth * scaleFactor;
     tempCanvas.height = originalHeight * scaleFactor;
 
-    // Gambar ulang dengan skala yang lebih besar
-    tempCtx.scale(scaleFactor, scaleFactor);
-    tempCtx.drawImage(twibbonImage, 0, 0, originalWidth, originalHeight);
-    tempCtx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
-    tempCtx.font = `30px ${currentFont}`;
-    tempCtx.fillStyle = currentColor;
-    tempCtx.fillText(document.getElementById('inputName').value, textX, textY);
-
     // Dapatkan URL gambar dari canvas sementara dan unduh
     const link = document.createElement('a');
     link.download = 'twibbon_hd.png';
