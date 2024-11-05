@@ -106,6 +106,7 @@ document.getElementById('colorSelect').addEventListener('input', function() {
     draw(); // Redraw after changing color
 });
 
+// Download function
 function downloadImage() {
     const originalWidth = canvas.width;
     const originalHeight = canvas.height;
