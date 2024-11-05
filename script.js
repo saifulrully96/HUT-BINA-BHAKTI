@@ -4,6 +4,7 @@ const canvas = document.getElementById("twibbonCanvas");
 const ctx = canvas.getContext("2d");
 
 let uploadedImage = new Image();
+let twibbonImage = new Image(); // Gambar twibbon
 let imageX = 0;
 let imageY = 0;
 let imageSize = 200; // Ukuran gambar default
@@ -11,6 +12,12 @@ let text = '';
 let font = 'Arial';
 let textColor = '#000000';
 let textYPosition = canvas.height / 2; // Posisi Y teks default (tengah)
+
+// Memuat gambar twibbon
+twibbonImage.src = 'path/to/twibbon.png'; // Ganti dengan path ke gambar twibbon
+twibbonImage.onload = () => {
+    draw(); // Menggambar ulang kanvas saat gambar twibbon dimuat
+};
 
 // Fungsi untuk mengunggah foto
 document.getElementById("uploadPhoto").addEventListener("change", function (event) {
@@ -35,7 +42,12 @@ document.getElementById("uploadPhoto").addEventListener("change", function (even
 // Fungsi untuk menggambar gambar dan teks pada kanvas
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height); // Menghapus kanvas
-    ctx.drawImage(uploadedImage, imageX, imageY, uploadedImage.width, uploadedImage.height); // Menggambar gambar yang diunggah
+
+    // Menggambar gambar yang diunggah terlebih dahulu
+    ctx.drawImage(uploadedImage, imageX, imageY, uploadedImage.width, uploadedImage.height); // Gambar yang diunggah
+
+    // Menggambar twibbon di atas gambar yang diunggah
+    ctx.drawImage(twibbonImage, 0, 0, canvas.width, canvas.height); // Gambar twibbon
 
     ctx.font = `${imageSize / 10}px ${font}`; // Mengatur ukuran font relatif terhadap ukuran gambar
     ctx.fillStyle = textColor; // Mengatur warna teks
