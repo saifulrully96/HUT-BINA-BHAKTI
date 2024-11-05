@@ -52,7 +52,7 @@ function draw() {
     ctx.drawImage(twibbonImage, 0, 0, canvas.width, canvas.height); // Draw Twibbon image
 
     // Draw text
-    ctx.font = `20px ${currentFont}`; // Set font
+    ctx.font = 20px ${currentFont}; // Set font
     ctx.fillStyle = currentColor; // Set text color
     ctx.fillText(document.getElementById('inputName').value, textX, textY); // Draw text
 }
@@ -106,7 +106,6 @@ document.getElementById('colorSelect').addEventListener('input', function() {
     draw(); // Redraw after changing color
 });
 
-// Download function
 function downloadImage() {
     const originalWidth = canvas.width;
     const originalHeight = canvas.height;
@@ -137,7 +136,7 @@ function downloadImage() {
     tempCtx.drawImage(twibbonImage, 0, 0, originalWidth * scaleFactor, originalHeight * scaleFactor); // Template twibbon
 
     // Gambar teks dengan ukuran font yang disesuaikan
-    tempCtx.font = `${scaledFontSize}px ${currentFont}`;
+    tempCtx.font = ${scaledFontSize}px ${currentFont};
     tempCtx.fillStyle = currentColor;
     tempCtx.fillText(document.getElementById('inputName').value, scaledTextX, scaledTextY);
 
