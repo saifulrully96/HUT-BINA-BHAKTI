@@ -3,16 +3,20 @@ const ctx = canvas.getContext('2d');
 
 let img = new Image();
 
-let imgWidth, imgHeight; // Image width and height will be set based on the uploaded image
-let imgX, imgY; // Initial position of the uploaded image
+let imgWidth = 200; // Set initial image width
+let imgHeight = 200; // Set initial image height
+let imgX = (canvas.width - imgWidth) / 2; // Center image horizontally
+let imgY = (canvas.height - imgHeight) / 2; // Center image vertically
 
-let textX, textY; // Initial text position
+let textX = canvas.width / 2;
+let textY = canvas.height / 2;
+
 let currentFont = 'Arial'; // Default font
 let currentColor = '#000000'; // Default text color
 
-// Load Twibbon template
+// Load Twibbon template with CORS
 const twibbonImage = new Image();
-twibbonImage.crossOrigin = "Anonymous"; // Avoid tainted canvas issue
+twibbonImage.crossOrigin = "anonymous"; // Enable CORS to avoid tainted canvas
 twibbonImage.src = 'twibbon.png';
 twibbonImage.onload = () => {
     draw(); // Redraw after Twibbon image is loaded
@@ -23,25 +27,16 @@ document.getElementById('uploadPhoto').addEventListener('change', function(e) {
     const reader = new FileReader();
     reader.onload = function(event) {
         img = new Image();
+        img.crossOrigin = "anonymous"; // Ensure CORS is applied to uploaded image
         img.onload = function() {
-            // Set canvas size to match the uploaded image size
-            canvas.width = img.width;
-            canvas.height = img.height;
-
-            // Set initial position and size of uploaded image
-            imgWidth = img.width;
-            imgHeight = img.height;
-            imgX = 0;
-            imgY = 0;
-
-            // Center text position on the new canvas size
-            textX = canvas.width / 2;
-            textY = canvas.height / 2;
-
+            imgWidth = 200; // Reset width of the uploaded image
+            imgHeight = 200; // Reset height of the uploaded image
+            imgX = (canvas.width - imgWidth) / 2; // Center image horizontally
+            imgY = (canvas.height - imgHeight) / 2; // Center image vertically
             draw(); // Redraw after image is uploaded
-        };
+        }
         img.src = event.target.result;
-    };
+    }
     reader.readAsDataURL(e.target.files[0]);
 });
 
@@ -55,14 +50,11 @@ function draw() {
     }
 
     // Draw Twibbon on top
-    if (twibbonImage.complete) {
-        ctx.drawImage(twibbonImage, 0, 0, canvas.width, canvas.height); // Draw Twibbon image
-    }
+    ctx.drawImage(twibbonImage, 0, 0, canvas.width, canvas.height); // Draw Twibbon image
 
     // Draw text
     ctx.font = `30px ${currentFont}`; // Set font
     ctx.fillStyle = currentColor; // Set text color
-    ctx.textAlign = 'center'; // Center-align text
     ctx.fillText(document.getElementById('inputName').value, textX, textY); // Draw text
 }
 
@@ -115,11 +107,26 @@ document.getElementById('colorSelect').addEventListener('input', function() {
     draw(); // Redraw after changing color
 });
 
-// Download function - HD and full resolution of the canvas
+// Download function with HD quality
 function downloadImage() {
     const link = document.createElement('a');
-    link.download = 'twibbon.png';
-    link.href = canvas.toDataURL('image/png', 1.0); // Full quality PNG
+    link.download = 'twibbon_hd.png';
+
+    // Scale canvas up to original image resolution if needed
+    const tempCanvas = document.createElement('canvas');
+    tempCanvas.width = img.naturalWidth || 720;  // Default to 720 if original resolution is not available
+    tempCanvas.height = img.naturalHeight || 720;
+    const tempCtx = tempCanvas.getContext('2d');
+
+    // Redraw everything on a higher resolution canvas
+    tempCtx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+    tempCtx.drawImage(twibbonImage, 0, 0, tempCanvas.width, tempCanvas.height);
+    
+    // Add text on the high-resolution canvas
+    tempCtx.font = `30px ${currentFont}`;
+    tempCtx.fillStyle = currentColor;
+    tempCtx.fillText(document.getElementById('inputName').value, textX, textY);
+
+    link.href = tempCanvas.toDataURL('image/png', 1.0); // Export HD version
     link.click(); // Trigger download
 }
-    
