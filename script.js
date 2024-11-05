@@ -106,10 +106,3 @@ document.getElementById('colorSelect').addEventListener('input', function() {
     draw(); // Redraw after changing color
 });
 
-// Download function
-function downloadImage() {
-    const link = document.createElement('a');
-    link.download = 'twibbon.png';
-    link.href = canvas.toDataURL('image/png'); // Get data URL from canvas in PNG format
-    link.click(); // Trigger download
-    }
