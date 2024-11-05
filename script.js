@@ -108,13 +108,8 @@ document.getElementById('colorSelect').addEventListener('input', function() {
 
 // Download function
 function downloadImage() {
-    const originalWidth = canvas.width;
-    const originalHeight = canvas.height;
-    const scaleFactor = 3; // Skala resolusi tinggi (misalnya 3x)
-
-    // Dapatkan URL gambar dari canvas sementara dan unduh
     const link = document.createElement('a');
-    link.download = 'twibbon_hd.png';
-    link.href = Canvas.toDataURL('image/png', 1.0);
-    link.click();
+    link.download = 'twibbon.png';
+    link.href = canvas.toDataURL('image/png'); // Dapatkan data URL dari canvas dalam format PNG
+    link.click(); // Klik untuk mendownload
 }
