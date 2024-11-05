@@ -119,17 +119,26 @@ function downloadImage() {
 
     // Gambar ulang dengan skala yang lebih besar
     tempCtx.scale(scaleFactor, scaleFactor);
-    
-    // Pertama, gambar gambar yang diunggah
-    tempCtx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
 
-    // Kedua, gambar twibbon di atas gambar yang diunggah
-    tempCtx.drawImage(twibbonImage, 0, 0, originalWidth, originalHeight);
+    // Sesuaikan posisi dan ukuran gambar yang diunggah dengan skala
+    const scaledImgX = imgX * scaleFactor;
+    const scaledImgY = imgY * scaleFactor;
+    const scaledImgWidth = imgWidth * scaleFactor;
+    const scaledImgHeight = imgHeight * scaleFactor;
 
-    // Gambar teks di atas kedua elemen tersebut
-    tempCtx.font = `30px ${currentFont}`;
+    // Sesuaikan posisi teks dengan skala
+    const scaledTextX = textX * scaleFactor;
+    const scaledTextY = textY * scaleFactor;
+    const scaledFontSize = 30 * scaleFactor;
+
+    // Gambar elemen dengan ukuran dan posisi yang disesuaikan
+    tempCtx.drawImage(img, scaledImgX, scaledImgY, scaledImgWidth, scaledImgHeight); // Gambar yang diunggah
+    tempCtx.drawImage(twibbonImage, 0, 0, originalWidth * scaleFactor, originalHeight * scaleFactor); // Template twibbon
+
+    // Gambar teks dengan ukuran font yang disesuaikan
+    tempCtx.font = `${scaledFontSize}px ${currentFont}`;
     tempCtx.fillStyle = currentColor;
-    tempCtx.fillText(document.getElementById('inputName').value, textX, textY);
+    tempCtx.fillText(document.getElementById('inputName').value, scaledTextX, scaledTextY);
 
     // Dapatkan URL gambar dari canvas sementara dan unduh
     const link = document.createElement('a');
