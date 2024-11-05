@@ -81,9 +81,11 @@ input[type="file"] {
 canvas {
     border: 2px solid #007bff;
     border-radius: 4px;
-    width: 100%; /* Ensures canvas is responsive */
-    max-width: 500px; /* Maximum width */
+    width: 100%;
+    max-width: 720px; /* Menyesuaikan dengan lebar asli canvas */
+    height: auto; /* Mengatur tinggi secara otomatis */
 }
+
 
 button[onclick="downloadImage()"] {
     background-color: #28a745; /* Green color for download button */
