@@ -2,16 +2,16 @@
 const canvas = document.getElementById('twibbonCanvas');
 const ctx = canvas.getContext('2d');
 
-// Variabel untuk menyimpan data foto, nama, posisi, dll.
-let image, userName, fontType = 'Arial', textColor = '#000000';
+// Variabel untuk menyimpan data foto, twibbon, nama, dll.
+let image, twibbonOverlay, userName, fontType = 'Arial', textColor = '#000000';
 let textX = 360, textY = 680; // posisi default nama
 let imageX = 0, imageY = 0, imageScale = 1;
 
-// Variabel untuk gambar Twibbon
-const twibbonImage = new Image();
-twibbonImage.src = 'twibbon.png';
-twibbonImage.onload = () => {
-    drawCanvas(); // Memanggil ulang penggambaran setelah Twibbon ter-load
+// Tambahkan desain twibbon overlay sebagai gambar
+twibbonOverlay = new Image();
+twibbonOverlay.src = 'path/to/your/twibbon.png'; // Ganti dengan path file twibbon
+twibbonOverlay.onload = () => {
+    drawCanvas(); // Panggil untuk memastikan overlay tergambar di awal
 };
 
 // Function untuk meng-upload foto
@@ -51,19 +51,19 @@ function drawCanvas() {
     // Bersihkan canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Gambar foto pengguna terlebih dahulu jika ada
+    // Gambar foto yang diunggah terlebih dahulu (lapisan bawah)
     if (image) {
         const scaledWidth = image.width * imageScale;
         const scaledHeight = image.height * imageScale;
         ctx.drawImage(image, imageX, imageY, scaledWidth, scaledHeight);
     }
 
-    // Gambar Twibbon di atas foto
-    if (twibbonImage.complete) {
-        ctx.drawImage(twibbonImage, 0, 0, canvas.width, canvas.height);
+    // Gambar overlay twibbon di atas foto yang diunggah
+    if (twibbonOverlay) {
+        ctx.drawImage(twibbonOverlay, 0, 0, canvas.width, canvas.height);
     }
 
-    // Gambar teks nama
+    // Gambar teks nama di atas twibbon
     if (userName) {
         ctx.font = `40px ${fontType}`;
         ctx.fillStyle = textColor;
@@ -116,8 +116,8 @@ function downloadImage() {
         hdCtx.drawImage(image, imageX * (hdCanvas.width / canvas.width), imageY * (hdCanvas.height / canvas.height), scaledWidth, scaledHeight);
     }
 
-    if (twibbonImage.complete) {
-        hdCtx.drawImage(twibbonImage, 0, 0, hdCanvas.width, hdCanvas.height);
+    if (twibbonOverlay) {
+        hdCtx.drawImage(twibbonOverlay, 0, 0, hdCanvas.width, hdCanvas.height);
     }
 
     if (userName) {
@@ -132,4 +132,5 @@ function downloadImage() {
     link.href = hdCanvas.toDataURL('image/png');
     link.download = 'Twibbon-HD.png';
     link.click();
-            }
+                                         }
+        
