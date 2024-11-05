@@ -112,12 +112,6 @@ function downloadImage() {
     const originalHeight = canvas.height;
     const scaleFactor = 3; // Skala resolusi tinggi (misalnya 3x)
 
-    // Buat canvas sementara untuk menggambar dengan resolusi tinggi
-    const tempCanvas = document.createElement('canvas');
-    const tempCtx = tempCanvas.getContext('2d');
-    tempCanvas.width = originalWidth * scaleFactor;
-    tempCanvas.height = originalHeight * scaleFactor;
-
     // Dapatkan URL gambar dari canvas sementara dan unduh
     const link = document.createElement('a');
     link.download = 'twibbon_hd.png';
