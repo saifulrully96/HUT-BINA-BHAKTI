@@ -42,17 +42,18 @@ document.getElementById('uploadPhoto').addEventListener('change', function(e) {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
 
-    // Draw uploaded image first
+    // Draw Twibbon on top
+    ctx.drawImage(twibbonImage, 0, 0, canvas.width, canvas.height); // Draw Twibbon image
+
+    // Draw uploaded image if available
     if (img.src) { // Ensure img is loaded
         ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight); // Draw uploaded image
     }
 
-    // Draw Twibbon on top
-    ctx.drawImage(twibbonImage, 0, 0, canvas.width, canvas.height); // Draw Twibbon image
-
     // Draw text
     ctx.font = `20px ${currentFont}`; // Set font
     ctx.fillStyle = currentColor; // Set text color
+    ctx.textAlign = 'center'; // Center text horizontally
     ctx.fillText(document.getElementById('inputName').value, textX, textY); // Draw text
 }
 
@@ -78,6 +79,8 @@ function resizeImage(action) {
         imgWidth = Math.max(imgWidth - resizeStep, 10); // Ensure minimum size
         imgHeight = Math.max(imgHeight - resizeStep, 10);
     }
+    imgX = (canvas.width - imgWidth) / 2; // Re-center image horizontally after resize
+    imgY = (canvas.height - imgHeight) / 2; // Re-center image vertically after resize
     draw(); // Redraw after resizing
 }
 
@@ -105,6 +108,7 @@ document.getElementById('colorSelect').addEventListener('input', function() {
     draw(); // Redraw after changing color
 });
 
+// Download image function
 function downloadImage() {
     const originalWidth = canvas.width;
     const originalHeight = canvas.height;
@@ -127,17 +131,16 @@ function downloadImage() {
 
     const scaledTextX = textX * scaleFactor;
     const scaledTextY = textY * scaleFactor;
-    const scaledFontSize = 20 * scaleFactor; // Changed from 30 to 20 to match the font size in draw()
+    const scaledFontSize = 30 * scaleFactor;
 
     // Draw uploaded image and template
-    if (img.src) { // Ensure img is loaded
-        tempCtx.drawImage(img, scaledImgX, scaledImgY, scaledImgWidth, scaledImgHeight);
-    }
+    tempCtx.drawImage(img, scaledImgX, scaledImgY, scaledImgWidth, scaledImgHeight);
     tempCtx.drawImage(twibbonImage, 0, 0, originalWidth * scaleFactor, originalHeight * scaleFactor);
 
     // Set the font and draw text
     tempCtx.font = `${scaledFontSize}px ${currentFont}`;
     tempCtx.fillStyle = currentColor;
+    tempCtx.textAlign = 'center'; // Center the text when drawing
     tempCtx.fillText(document.getElementById('inputName').value, scaledTextX, scaledTextY);
 
     // Download the image
