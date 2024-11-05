@@ -52,7 +52,7 @@ function draw() {
     ctx.drawImage(twibbonImage, 0, 0, canvas.width, canvas.height); // Draw Twibbon image
 
     // Draw text
-    ctx.font = `30px ${currentFont}`; // Set font
+    ctx.font = `20px ${currentFont}`; // Set font
     ctx.fillStyle = currentColor; // Set text color
     ctx.fillText(document.getElementById('inputName').value, textX, textY); // Draw text
 }
