@@ -3,20 +3,16 @@ const ctx = canvas.getContext('2d');
 
 let img = new Image();
 
-let imgWidth = 200; // Set initial image width
-let imgHeight = 200; // Set initial image height
-let imgX = (canvas.width - imgWidth) / 2; // Center image horizontally
-let imgY = (canvas.height - imgHeight) / 2; // Center image vertically
+let imgWidth, imgHeight; // Image width and height will be set based on the uploaded image
+let imgX, imgY; // Initial position of the uploaded image
 
-let textX = canvas.width / 2;
-let textY = canvas.height / 2;
-
+let textX, textY; // Initial text position
 let currentFont = 'Arial'; // Default font
 let currentColor = '#000000'; // Default text color
 
 // Load Twibbon template
 const twibbonImage = new Image();
-twibbonImage.crossOrigin = "Anonymous"; // Add CORS to avoid tainted canvas issue
+twibbonImage.crossOrigin = "Anonymous"; // Avoid tainted canvas issue
 twibbonImage.src = 'twibbon.png';
 twibbonImage.onload = () => {
     draw(); // Redraw after Twibbon image is loaded
@@ -28,14 +24,24 @@ document.getElementById('uploadPhoto').addEventListener('change', function(e) {
     reader.onload = function(event) {
         img = new Image();
         img.onload = function() {
-            imgWidth = 200; // Reset width of the uploaded image
-            imgHeight = 200; // Reset height of the uploaded image
-            imgX = (canvas.width - imgWidth) / 2; // Center image horizontally
-            imgY = (canvas.height - imgHeight) / 2; // Center image vertically
+            // Set canvas size to match the uploaded image size
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+            // Set initial position and size of uploaded image
+            imgWidth = img.width;
+            imgHeight = img.height;
+            imgX = 0;
+            imgY = 0;
+
+            // Center text position on the new canvas size
+            textX = canvas.width / 2;
+            textY = canvas.height / 2;
+
             draw(); // Redraw after image is uploaded
-        }
+        };
         img.src = event.target.result;
-    }
+    };
     reader.readAsDataURL(e.target.files[0]);
 });
 
@@ -49,11 +55,14 @@ function draw() {
     }
 
     // Draw Twibbon on top
-    ctx.drawImage(twibbonImage, 0, 0, canvas.width, canvas.height); // Draw Twibbon image
+    if (twibbonImage.complete) {
+        ctx.drawImage(twibbonImage, 0, 0, canvas.width, canvas.height); // Draw Twibbon image
+    }
 
     // Draw text
     ctx.font = `30px ${currentFont}`; // Set font
     ctx.fillStyle = currentColor; // Set text color
+    ctx.textAlign = 'center'; // Center-align text
     ctx.fillText(document.getElementById('inputName').value, textX, textY); // Draw text
 }
 
@@ -106,3 +115,11 @@ document.getElementById('colorSelect').addEventListener('input', function() {
     draw(); // Redraw after changing color
 });
 
+// Download function - HD and full resolution of the canvas
+function downloadImage() {
+    const link = document.createElement('a');
+    link.download = 'twibbon.png';
+    link.href = canvas.toDataURL('image/png', 1.0); // Full quality PNG
+    link.click(); // Trigger download
+}
+    
