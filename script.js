@@ -1,151 +1,114 @@
-const canvas = document.getElementById('twibbonCanvas'); 
-const ctx = canvas.getContext('2d');
+// script.js
 
-let img = new Image();
-let imgWidth = 200; // Set initial image width
-let imgHeight = 200; // Set initial image height
-let imgX = (canvas.width - imgWidth) / 2; // Center image horizontally
-let imgY = (canvas.height - imgHeight) / 2; // Center image vertically
+const canvas = document.getElementById("twibbonCanvas");
+const ctx = canvas.getContext("2d");
 
-let textX = canvas.width / 2;
-let textY = canvas.height / 2;
+let uploadedImage = new Image();
+let imageX = 0;
+let imageY = 0;
+let imageSize = 200; // Ukuran gambar default
+let text = '';
+let font = 'Arial';
+let textColor = '#000000';
+let textYPosition = canvas.height / 2; // Posisi Y teks default (tengah)
 
-let currentFont = 'Arial'; // Default font
-let currentColor = '#000000'; // Default text color
-
-// Load Twibbon template
-const twibbonImage = new Image();
-twibbonImage.crossOrigin = "Anonymous"; // Add CORS to avoid tainted canvas issue
-twibbonImage.src = 'twibbon.png';
-twibbonImage.onload = () => {
-    draw(); // Redraw after Twibbon image is loaded
-};
-
-// Upload photo
-document.getElementById('uploadPhoto').addEventListener('change', function(e) {
-    const reader = new FileReader();
-    reader.onload = function(event) {
-        img = new Image();
-        img.onload = function() {
-            imgWidth = 200; // Reset width of the uploaded image
-            imgHeight = 200; // Reset height of the uploaded image
-            imgX = (canvas.width - imgWidth) / 2; // Center image horizontally
-            imgY = (canvas.height - imgHeight) / 2; // Center image vertically
-            draw(); // Redraw after image is uploaded
-        }
-        img.src = event.target.result;
+// Fungsi untuk mengunggah foto
+document.getElementById("uploadPhoto").addEventListener("change", function (event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            uploadedImage.src = e.target.result;
+            uploadedImage.onload = () => {
+                // Atur ukuran kanvas sesuai dengan ukuran gambar asli
+                canvas.width = uploadedImage.width;
+                canvas.height = uploadedImage.height;
+                imageX = 0; // Reset posisi X gambar
+                imageY = 0; // Reset posisi Y gambar
+                draw(); // Menggambar ulang kanvas saat gambar dimuat
+            };
+        };
+        reader.readAsDataURL(file);
     }
-    reader.readAsDataURL(e.target.files[0]);
 });
 
-// Drawing function
+// Fungsi untuk menggambar gambar dan teks pada kanvas
 function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Menghapus kanvas
+    ctx.drawImage(uploadedImage, imageX, imageY, uploadedImage.width, uploadedImage.height); // Menggambar gambar yang diunggah
 
-    // Draw Twibbon on top
-    ctx.drawImage(twibbonImage, 0, 0, canvas.width, canvas.height); // Draw Twibbon image
-
-    // Draw uploaded image if available
-    if (img.src) { // Ensure img is loaded
-        ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight); // Draw uploaded image
-    }
-
-    // Draw text
-    ctx.font = `20px ${currentFont}`; // Set font
-    ctx.fillStyle = currentColor; // Set text color
-    ctx.textAlign = 'center'; // Center text horizontally
-    ctx.fillText(document.getElementById('inputName').value, textX, textY); // Draw text
+    ctx.font = `${imageSize / 10}px ${font}`; // Mengatur ukuran font relatif terhadap ukuran gambar
+    ctx.fillStyle = textColor; // Mengatur warna teks
+    ctx.fillText(text, canvas.width / 2 - ctx.measureText(text).width / 2, textYPosition); // Menempatkan teks di tengah
 }
 
-// Move text function
+// Fungsi untuk memperbarui input teks
+document.getElementById("inputName").addEventListener("input", function (event) {
+    text = event.target.value;
+    draw();
+});
+
+// Fungsi untuk mengubah jenis font
+document.getElementById("fontSelect").addEventListener("change", function (event) {
+    font = event.target.value;
+    draw();
+});
+
+// Fungsi untuk mengubah warna teks
+document.getElementById("colorSelect").addEventListener("input", function (event) {
+    textColor = event.target.value;
+    draw();
+});
+
+// Fungsi untuk menggerakkan teks
 function moveText(direction) {
-    const step = 5; // Step distance
     switch (direction) {
-        case 'up': textY -= step; break;
-        case 'down': textY += step; break;
-        case 'left': textX -= step; break;
-        case 'right': textX += step; break;
+        case 'up':
+            textYPosition -= 10;
+            break;
+        case 'down':
+            textYPosition += 10;
+            break;
     }
-    draw(); // Redraw after moving text
+    draw();
 }
 
-// Resize image function
+// Fungsi untuk mengubah ukuran gambar yang diunggah (opsional)
 function resizeImage(action) {
-    const resizeStep = 10; // Resize step
     if (action === 'increase') {
-        imgWidth += resizeStep;
-        imgHeight += resizeStep;
+        imageSize += 10;
     } else if (action === 'decrease') {
-        imgWidth = Math.max(imgWidth - resizeStep, 10); // Ensure minimum size
-        imgHeight = Math.max(imgHeight - resizeStep, 10);
+        imageSize = Math.max(10, imageSize - 10); // Mencegah ukuran menjadi negatif atau nol
     }
-    imgX = (canvas.width - imgWidth) / 2; // Re-center image horizontally after resize
-    imgY = (canvas.height - imgHeight) / 2; // Re-center image vertically after resize
-    draw(); // Redraw after resizing
+    draw();
 }
 
-// Move image function
+// Fungsi untuk memindahkan gambar
 function moveImage(direction) {
-    const step = 5; // Step distance
     switch (direction) {
-        case 'up': imgY -= step; break;
-        case 'down': imgY += step; break;
-        case 'left': imgX -= step; break;
-        case 'right': imgX += step; break;
+        case 'up':
+            imageY -= 10;
+            break;
+        case 'down':
+            imageY += 10;
+            break;
+        case 'left':
+            imageX -= 10;
+            break;
+        case 'right':
+            imageX += 10;
+            break;
     }
-    draw(); // Redraw after moving image
+    draw();
 }
 
-// Change font event
-document.getElementById('fontSelect').addEventListener('change', function() {
-    currentFont = this.value;
-    draw(); // Redraw after changing font
-});
-
-// Change text color event
-document.getElementById('colorSelect').addEventListener('input', function() {
-    currentColor = this.value;
-    draw(); // Redraw after changing color
-});
-
-// Download image function
+// Fungsi untuk mengunduh kanvas sebagai gambar
 function downloadImage() {
-    const originalWidth = canvas.width;
-    const originalHeight = canvas.height;
-    const scaleFactor = 3;
-
-    // Create a temporary canvas
-    const tempCanvas = document.createElement('canvas');
-    const tempCtx = tempCanvas.getContext('2d');
-    tempCanvas.width = originalWidth * scaleFactor;
-    tempCanvas.height = originalHeight * scaleFactor;
-
-    // Scale the context
-    tempCtx.scale(scaleFactor, scaleFactor);
-
-    // Adjust image and text positions based on the scale
-    const scaledImgX = imgX * scaleFactor;
-    const scaledImgY = imgY * scaleFactor;
-    const scaledImgWidth = imgWidth * scaleFactor;
-    const scaledImgHeight = imgHeight * scaleFactor;
-
-    const scaledTextX = textX * scaleFactor;
-    const scaledTextY = textY * scaleFactor;
-    const scaledFontSize = 30 * scaleFactor;
-
-    // Draw uploaded image and template
-    tempCtx.drawImage(img, scaledImgX, scaledImgY, scaledImgWidth, scaledImgHeight);
-    tempCtx.drawImage(twibbonImage, 0, 0, originalWidth * scaleFactor, originalHeight * scaleFactor);
-
-    // Set the font and draw text
-    tempCtx.font = `${scaledFontSize}px ${currentFont}`;
-    tempCtx.fillStyle = currentColor;
-    tempCtx.textAlign = 'center'; // Center the text when drawing
-    tempCtx.fillText(document.getElementById('inputName').value, scaledTextX, scaledTextY);
-
-    // Download the image
     const link = document.createElement('a');
-    link.download = 'twibbon_hd.png';
-    link.href = tempCanvas.toDataURL('image/png', 1.0);
-    link.click();
+    link.download = 'twibbon.png'; // Nama file untuk diunduh
+    link.href = canvas.toDataURL("image/png", 1.0); // Mengambil data kanvas sebagai PNG dengan kualitas maksimal
+    link.click(); // Memicu pengunduhan
 }
+
+// Panggilan gambar awal untuk menyiapkan kanvas
+draw();
