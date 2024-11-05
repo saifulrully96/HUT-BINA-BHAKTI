@@ -33,7 +33,7 @@
         <!-- 3. Design Twibbon -->
         <div class="canvas-container">
             <h2>3. Desain Twibbon:</h2>
-            <canvas id="twibbonCanvas" width="1080" height="1080"></canvas>
+            <canvas id="twibbonCanvas" width="720" height="720"></canvas>
         </div>
 
         <!-- 4. Controls for adjusting text position -->
@@ -60,115 +60,6 @@
         <button onclick="downloadImage()">Download Twibbon</button>
     </div>
 
-    <script>
-        const canvas = document.getElementById('twibbonCanvas');
-        const ctx = canvas.getContext('2d');
-        let img = new Image();
-        let imgWidth = 200;
-        let imgHeight = 200;
-        let imgX = (canvas.width - imgWidth) / 2;
-        let imgY = (canvas.height - imgHeight) / 2;
-        let textX = canvas.width / 2;
-        let textY = canvas.height / 2;
-        let currentFont = 'Arial';
-        let currentColor = '#000000';
-
-        // Muat template Twibbon
-        const twibbonImage = new Image();
-        twibbonImage.crossOrigin = "Anonymous";
-        twibbonImage.src = 'twibbon.png';
-        twibbonImage.onload = () => {
-            draw();
-        };
-
-        // Mengupload foto
-        document.getElementById('uploadPhoto').addEventListener('change', function(e) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                img = new Image();
-                img.onload = function() {
-                    imgWidth = 200;
-                    imgHeight = 200;
-                    imgX = (canvas.width - imgWidth) / 2;
-                    imgY = (canvas.height - imgHeight) / 2;
-                    draw();
-                }
-                img.src = event.target.result;
-            }
-            reader.readAsDataURL(e.target.files[0]);
-        });
-
-        // Menggambar canvas
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            if (twibbonImage.complete) {
-                ctx.drawImage(twibbonImage, 0, 0, canvas.width, canvas.height);
-            }
-            if (img.complete) {
-                ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
-            }
-            ctx.font = `40px ${currentFont}`;
-            ctx.fillStyle = currentColor;
-            ctx.textAlign = 'center';
-            ctx.fillText(document.getElementById('inputName').value, textX, textY);
-        }
-
-        // Menggerakkan teks
-        function moveText(direction) {
-            const step = 5;
-            switch (direction) {
-                case 'up': textY -= step; break;
-                case 'down': textY += step; break;
-                case 'left': textX -= step; break;
-                case 'right': textX += step; break;
-            }
-            draw();
-        }
-
-        // Mengubah ukuran gambar
-        function resizeImage(action) {
-            const resizeStep = 10;
-            if (action === 'increase') {
-                imgWidth += resizeStep;
-                imgHeight += resizeStep;
-            } else if (action === 'decrease') {
-                imgWidth = Math.max(imgWidth - resizeStep, 10);
-                imgHeight = Math.max(imgHeight - resizeStep, 10);
-            }
-            draw();
-        }
-
-        // Menggerakkan gambar
-        function moveImage(direction) {
-            const step = 5;
-            switch (direction) {
-                case 'up': imgY -= step; break;
-                case 'down': imgY += step; break;
-                case 'left': imgX -= step; break;
-                case 'right': imgX += step; break;
-            }
-            draw();
-        }
-
-        // Mengubah jenis font
-        document.getElementById('fontSelect').addEventListener('change', function() {
-            currentFont = this.value;
-            draw();
-        });
-
-        // Mengubah warna teks
-        document.getElementById('colorSelect').addEventListener('input', function() {
-            currentColor = this.value;
-            draw();
-        });
-
-        // Men-download Twibbon
-        function downloadImage() {
-            const link = document.createElement('a');
-            link.download = 'twibbon_hd.png';
-            link.href = canvas.toDataURL('image/png', 1.0); // kualitas tinggi dengan resolusi HD
-            link.click();
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
