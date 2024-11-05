@@ -106,10 +106,34 @@ document.getElementById('colorSelect').addEventListener('input', function() {
     draw(); // Redraw after changing color
 });
 
-// Download function
 function downloadImage() {
+    const originalWidth = canvas.width;
+    const originalHeight = canvas.height;
+    const scaleFactor = 3; // Skala resolusi tinggi (misalnya 3x)
+
+    // Buat canvas sementara untuk menggambar dengan resolusi tinggi
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCanvas.width = originalWidth * scaleFactor;
+    tempCanvas.height = originalHeight * scaleFactor;
+
+    // Gambar ulang dengan skala yang lebih besar
+    tempCtx.scale(scaleFactor, scaleFactor);
+    
+    // Pertama, gambar gambar yang diunggah
+    tempCtx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
+
+    // Kedua, gambar twibbon di atas gambar yang diunggah
+    tempCtx.drawImage(twibbonImage, 0, 0, originalWidth, originalHeight);
+
+    // Gambar teks di atas kedua elemen tersebut
+    tempCtx.font = `30px ${currentFont}`;
+    tempCtx.fillStyle = currentColor;
+    tempCtx.fillText(document.getElementById('inputName').value, textX, textY);
+
+    // Dapatkan URL gambar dari canvas sementara dan unduh
     const link = document.createElement('a');
-    link.download = 'twibbon.png';
-    link.href = canvas.toDataURL('image/png'); // Dapatkan data URL dari canvas dalam format PNG
-    link.click(); // Klik untuk mendownload
+    link.download = 'twibbon_hd.png';
+    link.href = tempCanvas.toDataURL('image/png', 1.0);
+    link.click();
 }
