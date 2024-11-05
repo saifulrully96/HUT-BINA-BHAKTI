@@ -82,13 +82,12 @@ canvas {
     border: 2px solid #007bff;
     border-radius: 4px;
     width: 100%;
-    max-width: 720px; /* Menyesuaikan dengan lebar asli canvas */
-    height: auto; /* Mengatur tinggi secara otomatis */
+    max-width: 720px; /* Menyesuaikan dengan ukuran asli */
+    height: auto; /* Memastikan tinggi otomatis */
 }
 
-
 button[onclick="downloadImage()"] {
-    background-color: #28a745; /* Green color for download button */
+    background-color: #28a745; /* Warna hijau untuk tombol download */
     width: 100%;
     padding: 12px;
     font-size: 18px;
