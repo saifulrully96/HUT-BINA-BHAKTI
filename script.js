@@ -2,7 +2,6 @@ const canvas = document.getElementById('twibbonCanvas');
 const ctx = canvas.getContext('2d');
 
 let img = new Image();
-
 let imgWidth = 200; // Set initial image width
 let imgHeight = 200; // Set initial image height
 let imgX = (canvas.width - imgWidth) / 2; // Center image horizontally
@@ -128,10 +127,12 @@ function downloadImage() {
 
     const scaledTextX = textX * scaleFactor;
     const scaledTextY = textY * scaleFactor;
-    const scaledFontSize = 30 * scaleFactor;
+    const scaledFontSize = 20 * scaleFactor; // Changed from 30 to 20 to match the font size in draw()
 
     // Draw uploaded image and template
-    tempCtx.drawImage(img, scaledImgX, scaledImgY, scaledImgWidth, scaledImgHeight);
+    if (img.src) { // Ensure img is loaded
+        tempCtx.drawImage(img, scaledImgX, scaledImgY, scaledImgWidth, scaledImgHeight);
+    }
     tempCtx.drawImage(twibbonImage, 0, 0, originalWidth * scaleFactor, originalHeight * scaleFactor);
 
     // Set the font and draw text
