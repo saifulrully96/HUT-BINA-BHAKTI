@@ -1,24 +1,21 @@
-// Ambil elemen canvas dan konteks 2D
 const canvas = document.getElementById('twibbonCanvas');
 const ctx = canvas.getContext('2d');
-
-// Variabel untuk menyimpan data gambar, ukuran, posisi, font, dan warna teks
 let img = new Image();
-let imgWidth = 200; 
-let imgHeight = 200; 
-let imgX = (canvas.width - imgWidth) / 2;
-let imgY = (canvas.height - imgHeight) / 2;
+let imgWidth = 200; // Set initial image width
+let imgHeight = 200; // Set initial image height
+let imgX = (canvas.width - imgWidth) / 2; // Center image horizontally
+let imgY = (canvas.height - imgHeight) / 2; // Center image vertically
 let textX = canvas.width / 2;
 let textY = canvas.height / 2;
-let currentFont = 'Arial'; 
-let currentColor = '#000000';
+let currentFont = 'Arial'; // Default font
+let currentColor = '#000000'; // Default text color
 
-// Memuat template Twibbon
+// Muat template Twibbon
 const twibbonImage = new Image();
-twibbonImage.crossOrigin = "Anonymous"; 
-twibbonImage.src = 'twibbon.png'; // Path ke gambar twibbon
+twibbonImage.crossOrigin = "Anonymous"; // Add CORS to avoid tainted canvas issue
+twibbonImage.src = 'twibbon.png';
 twibbonImage.onload = () => {
-    draw(); // Menggambar ulang setelah gambar twibbon dimuat
+    draw(); // Menggambar ulang setelah gambar Twibbon dimuat
 };
 
 // Mengupload foto
@@ -27,10 +24,10 @@ document.getElementById('uploadPhoto').addEventListener('change', function(e) {
     reader.onload = function(event) {
         img = new Image();
         img.onload = function() {
-            imgWidth = 200; // Reset ukuran gambar yang diupload
-            imgHeight = 200;
-            imgX = (canvas.width - imgWidth) / 2; // Center secara horizontal
-            imgY = (canvas.height - imgHeight) / 2; // Center secara vertikal
+            imgWidth = 200; // Reset width of the uploaded image
+            imgHeight = 200; // Reset height of the uploaded image
+            imgX = (canvas.width - imgWidth) / 2; // Center image horizontally
+            imgY = (canvas.height - imgHeight) / 2; // Center image vertically
             draw(); // Menggambar ulang setelah gambar diupload
         }
         img.src = event.target.result;
@@ -38,78 +35,69 @@ document.getElementById('uploadPhoto').addEventListener('change', function(e) {
     reader.readAsDataURL(e.target.files[0]);
 });
 
-// Fungsi menggambar canvas
+// Menggambar canvas
 function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // Hapus canvas
-
-    // Gambar gambar yang diunggah (lapisan bawah)
-    if (img.src) {
-        ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
-    }
-
-    // Gambar twibbon overlay di atas gambar yang diunggah (lapisan atas)
-    ctx.drawImage(twibbonImage, 0, 0, canvas.width, canvas.height);
-
-    // Gambar teks di atas twibbon
-    ctx.font = `30px ${currentFont}`; // Atur font
-    ctx.fillStyle = currentColor; // Atur warna teks
-    ctx.textAlign = 'center';
-    ctx.fillText(document.getElementById('inputName').value, textX, textY); // Gambar teks
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Menghapus canvas
+    ctx.drawImage(twibbonImage, 0, 0, canvas.width, canvas.height); // Menggambar gambar Twibbon
+    ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight); // Menggambar gambar yang diupload
+    ctx.font = `30px ${currentFont}`; // Mengatur font
+    ctx.fillStyle = currentColor; // Mengatur warna teks
+    ctx.fillText(document.getElementById('inputName').value, textX, textY); // Menggambar teks
 }
 
-// Fungsi untuk menggerakkan teks
+// Menggerakkan teks
 function moveText(direction) {
-    const step = 5;
+    const step = 5; // Jarak gerak
     switch (direction) {
         case 'up': textY -= step; break;
         case 'down': textY += step; break;
         case 'left': textX -= step; break;
         case 'right': textX += step; break;
     }
-    draw();
+    draw(); // Menggambar ulang setelah memindahkan teks
 }
 
-// Fungsi untuk mengubah ukuran gambar
+// Mengubah ukuran gambar
 function resizeImage(action) {
-    const resizeStep = 10;
+    const resizeStep = 10; // Ukuran perubahan
     if (action === 'increase') {
         imgWidth += resizeStep;
         imgHeight += resizeStep;
     } else if (action === 'decrease') {
-        imgWidth = Math.max(imgWidth - resizeStep, 10);
-        imgHeight = Math.max(imgHeight - resizeStep, 10);
+        imgWidth = Math.max(imgWidth - resizeStep, 10); // Pastikan ukuran tidak kurang dari 10
+        imgHeight = Math.max(imgHeight - resizeStep, 10); // Pastikan ukuran tidak kurang dari 10
     }
-    draw();
+    draw(); // Menggambar ulang setelah mengubah ukuran
 }
 
-// Fungsi untuk menggerakkan gambar
+// Menggerakkan gambar
 function moveImage(direction) {
-    const step = 5;
+    const step = 5; // Jarak gerak
     switch (direction) {
         case 'up': imgY -= step; break;
         case 'down': imgY += step; break;
         case 'left': imgX -= step; break;
         case 'right': imgX += step; break;
     }
-    draw();
+    draw(); // Menggambar ulang setelah memindahkan gambar
 }
 
-// Mengubah font teks
+// Mengubah jenis font
 document.getElementById('fontSelect').addEventListener('change', function() {
     currentFont = this.value;
-    draw();
+    draw(); // Menggambar ulang setelah mengubah font
 });
 
 // Mengubah warna teks
 document.getElementById('colorSelect').addEventListener('input', function() {
     currentColor = this.value;
-    draw();
+    draw(); // Menggambar ulang setelah mengubah warna
 });
 
-// Fungsi untuk mendownload Twibbon
+// Men-download Twibbon
 function downloadImage() {
     const link = document.createElement('a');
     link.download = 'twibbon.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+    link.href = canvas.toDataURL('image/png'); // Dapatkan data URL dari canvas dalam format PNG
+    link.click(); // Klik untuk mendownload
 }
