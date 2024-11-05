@@ -115,6 +115,6 @@ function downloadImage() {
     // Dapatkan URL gambar dari canvas sementara dan unduh
     const link = document.createElement('a');
     link.download = 'twibbon_hd.png';
-    link.href = tempCanvas.toDataURL('image/png', 1.0);
+    link.href = Canvas.toDataURL('image/png', 1.0);
     link.click();
 }
