@@ -101,3 +101,37 @@ button[onclick="downloadImage()"] {
 button[onclick="downloadImage()"]:hover {
     background-color: #218838;
 }
+
+/* Tambahkan aturan untuk memastikan konten dapat di-scroll */
+html, body {
+    overflow: auto; /* Aktifkan scrollbar jika ada konten yang keluar dari layar */
+}
+
+/* Buat tampilan lebih responsif */
+@media (max-width: 768px) {
+    body {
+        height: auto; /* Buat tinggi fleksibel di perangkat kecil */
+        padding: 10px;
+    }
+
+    .container {
+        width: 100%; /* Gunakan seluruh lebar layar */
+        padding: 15px; /* Kurangi padding agar tidak terlalu mepet */
+    }
+
+    /* Sesuaikan ukuran kanvas pada layar kecil */
+    canvas {
+        width: 100%;
+        max-width: 100%; /* Pastikan kanvas tidak lebih besar dari container */
+        height: auto;
+    }
+
+    /* Buat tombol lebih kompak */
+    .controls button, button[onclick="downloadImage()"] {
+        font-size: 14px;
+        padding: 8px 10px;
+        margin: 5px 0;
+        width: 100%; /* Gunakan lebar penuh */
+    }
+}
+
