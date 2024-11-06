@@ -107,6 +107,38 @@ html, body {
     overflow: auto; /* Aktifkan scrollbar jika ada konten yang keluar dari layar */
 }
 
+/* Gaya umum */
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px; /* Jarak antar tombol */
+    justify-content: center; /* Pusatkan tombol */
+}
+
+.controls button {
+    padding: 6px 10px; /* Ukuran tombol lebih kecil */
+    font-size: 14px; /* Font lebih kecil */
+    flex: 1 1 auto; /* Lebar fleksibel */
+    max-width: 100px; /* Maksimal lebar tombol */
+    margin: 0; /* Hilangkan margin */
+}
+
+button[onclick="downloadImage()"] {
+    background-color: #28a745; /* Warna hijau untuk tombol download */
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    margin-top: 15px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+}
+
+button[onclick="downloadImage()"]:hover {
+    background-color: #218838;
+}
+
 /* Buat tampilan lebih responsif */
 @media (max-width: 768px) {
     body {
@@ -126,12 +158,15 @@ html, body {
         height: auto;
     }
 
-    /* Buat tombol lebih kompak */
+    /* Buat tombol lebih kompak di perangkat kecil */
+    .controls {
+        flex-direction: column; /* Atur tombol berjajar ke bawah di layar kecil */
+    }
+    
     .controls button, button[onclick="downloadImage()"] {
         font-size: 14px;
         padding: 8px 10px;
-        margin: 5px 0;
         width: 100%; /* Gunakan lebar penuh */
+        max-width: none; /* Hilangkan batas lebar maksimal */
     }
 }
-
