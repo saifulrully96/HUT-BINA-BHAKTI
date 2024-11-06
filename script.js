@@ -1,132 +1,110 @@
-const canvas = document.getElementById('twibbonCanvas'); 
+const canvas = document.getElementById('twibbonCanvas');
 const ctx = canvas.getContext('2d');
-
 let img = new Image();
-
-let imgWidth = 200; // Set initial image width
-let imgHeight = 200; // Set initial image height
+let imgWidth = 600; // Set initial image width
+let imgHeight = 600; // Set initial image height
 let imgX = (canvas.width - imgWidth) / 2; // Center image horizontally
 let imgY = (canvas.height - imgHeight) / 2; // Center image vertically
-
 let textX = canvas.width / 2;
 let textY = canvas.height / 2;
-
 let currentFont = 'Arial'; // Default font
 let currentColor = '#000000'; // Default text color
 
-// Load Twibbon template with CORS
+// Muat template Twibbon
 const twibbonImage = new Image();
-twibbonImage.crossOrigin = "anonymous"; // Enable CORS to avoid tainted canvas
+twibbonImage.crossOrigin = "Anonymous";
 twibbonImage.src = 'twibbon.png';
 twibbonImage.onload = () => {
-    draw(); // Redraw after Twibbon image is loaded
+    draw(); // Panggil draw ketika twibbon sudah dimuat
 };
 
-// Upload photo
+// Mengupload foto
 document.getElementById('uploadPhoto').addEventListener('change', function(e) {
     const reader = new FileReader();
     reader.onload = function(event) {
         img = new Image();
-        img.crossOrigin = "anonymous"; // Ensure CORS is applied to uploaded image
         img.onload = function() {
-            imgWidth = 200; // Reset width of the uploaded image
-            imgHeight = 200; // Reset height of the uploaded image
-            imgX = (canvas.width - imgWidth) / 2; // Center image horizontally
-            imgY = (canvas.height - imgHeight) / 2; // Center image vertically
-            draw(); // Redraw after image is uploaded
+            imgWidth = 300; 
+            imgHeight = 300;
+            imgX = (canvas.width - imgWidth) / 2; 
+            imgY = (canvas.height - imgHeight) / 2; 
+            draw(); // Panggil draw ketika gambar yang diunggah selesai dimuat
         }
         img.src = event.target.result;
     }
     reader.readAsDataURL(e.target.files[0]);
 });
 
-// Drawing function
+// Menggambar canvas
 function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
-
-    // Draw uploaded image first
-    if (img.src) { // Ensure img is loaded
-        ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight); // Draw uploaded image
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // Bersihkan canvas
+    
+    // Pastikan gambar sudah selesai dimuat sebelum menggambar
+    if (img.complete) {
+        ctx.drawImage(img, imgX, imgY, imgWidth, imgHeight); // Gambar yang diupload terlebih dahulu
     }
-
-    // Draw Twibbon on top
-    ctx.drawImage(twibbonImage, 0, 0, canvas.width, canvas.height); // Draw Twibbon image
-
-    // Draw text
+    if (twibbonImage.complete) {
+        ctx.drawImage(twibbonImage, 0, 0, canvas.width, canvas.height); // Lalu gambar twibbon
+    }
+    
     ctx.font = `30px ${currentFont}`; // Set font
-    ctx.fillStyle = currentColor; // Set text color
-    ctx.fillText(document.getElementById('inputName').value, textX, textY); // Draw text
+    ctx.fillStyle = currentColor; // Set warna teks
+    ctx.fillText(document.getElementById('inputName').value, textX, textY); // Tulis teks
 }
 
-// Move text function
+// Menggerakkan teks
 function moveText(direction) {
-    const step = 5; // Step distance
+    const step = 5; 
     switch (direction) {
         case 'up': textY -= step; break;
         case 'down': textY += step; break;
         case 'left': textX -= step; break;
         case 'right': textX += step; break;
     }
-    draw(); // Redraw after moving text
+    draw(); 
 }
 
-// Resize image function
+// Mengubah ukuran gambar
 function resizeImage(action) {
-    const resizeStep = 10; // Resize step
+    const resizeStep = 10;
     if (action === 'increase') {
         imgWidth += resizeStep;
         imgHeight += resizeStep;
     } else if (action === 'decrease') {
-        imgWidth = Math.max(imgWidth - resizeStep, 10); // Ensure minimum size
+        imgWidth = Math.max(imgWidth - resizeStep, 10);
         imgHeight = Math.max(imgHeight - resizeStep, 10);
     }
-    draw(); // Redraw after resizing
+    draw(); 
 }
 
-// Move image function
+// Menggerakkan gambar
 function moveImage(direction) {
-    const step = 5; // Step distance
+    const step = 5;
     switch (direction) {
         case 'up': imgY -= step; break;
         case 'down': imgY += step; break;
         case 'left': imgX -= step; break;
         case 'right': imgX += step; break;
     }
-    draw(); // Redraw after moving image
+    draw(); 
 }
 
-// Change font event
+// Mengubah jenis font
 document.getElementById('fontSelect').addEventListener('change', function() {
     currentFont = this.value;
-    draw(); // Redraw after changing font
+    draw(); 
 });
 
-// Change text color event
+// Mengubah warna teks
 document.getElementById('colorSelect').addEventListener('input', function() {
     currentColor = this.value;
-    draw(); // Redraw after changing color
+    draw();
 });
 
-// Download function with HD quality
+// Men-download Twibbon
 function downloadImage() {
     const link = document.createElement('a');
-    link.download = 'twibbon_hd.png';
-
-    // Scale canvas up to original image resolution if needed
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = img.naturalWidth || 720;  // Default to 720 if original resolution is not available
-    tempCanvas.height = img.naturalHeight || 720;
-    const tempCtx = tempCanvas.getContext('2d');
-
-    // Redraw everything on a higher resolution canvas
-    tempCtx.drawImage(img, imgX, imgY, imgWidth, imgHeight);
-    tempCtx.drawImage(twibbonImage, 0, 0, tempCanvas.width, tempCanvas.height);
-    
-    // Add text on the high-resolution canvas
-    tempCtx.font = `30px ${currentFont}`;
-    tempCtx.fillStyle = currentColor;
-    tempCtx.fillText(document.getElementById('inputName').value, textX, textY);
-
-    link.href = tempCanvas.toDataURL('image/png', 1.0); // Export HD version
-    link.click(); // Trigger download
+    link.download = 'twibbon.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
 }
